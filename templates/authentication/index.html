@@ -17,7 +17,7 @@
         <strong>Message:</strong> {{ message }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
-  </button>
+    </button>
     </div>
     {% endfor %}
 
@@ -25,16 +25,20 @@
 
 
     {% if user.is_authenticated %}
-    <h2>Hello {{ fname }}!</h2>
-    <h3>Youre logged In</h3>
+        <h2>Hello {{ fname }}!</h2>
+        <h3>Youre logged In</h3>
    
     <button type="submit"><a href="/signout">SignOut</a></button>
-    {% else %}
+    {% endif %}
+
+    {% if user.unauthenticated %}   
     <button type="submit"><a href="/signup">SignUp</a></button>
     <br/>
     <br/>
     <button type="submit"><a href="/login">login</a></button>
     {% endif %}
+    
+
 
    <script src = "" async defer></script>
 </body>

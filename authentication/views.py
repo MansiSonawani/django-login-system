@@ -2,7 +2,8 @@ from cgitb import html
 from re import template
 
 from django.contrib import messages
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate, logout
+from django.contrib.auth import login as Django_login
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -26,7 +27,7 @@ def signup(request):
         myuser.last_name = lname
         myuser.save()
         messages.success(request, "Your account has been successfully created")
-        return redirect('login')
+        return redirect('Django_login')
 
     return render(request, "authentication/signup.html")        
              
@@ -38,7 +39,7 @@ def login(request):
         user = authenticate(username= username, password = pass1)
         
         if user is not None:
-            login(request, user)
+            Django_login(request, user)
             fname = user.first_name
             return render(request, "authentication/index.html", {'fname': fname})
         else:
@@ -48,7 +49,8 @@ def login(request):
     return render(request, "authentication/login.html")     
 
 def logout(request):
-    pass
-
+    logout(request)
+    messages.success(request, "logged out successfully! ")
+    return redirect('home')
     
 
