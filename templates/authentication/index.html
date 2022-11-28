@@ -25,21 +25,20 @@
 
 
     {% if user.is_authenticated %}
-        <h2>Hello {{ fname }}!</h2>
-        <h3>Youre logged In</h3>
+        <p>Hello {{ fname }}!</p>
+        <p>Youre logged In</p>
    
     <button type="submit"><a href="/signout">SignOut</a></button>
-    {% endif %}
+    
 
-    {% if user.unauthenticated %}   
+    {% else %}   
     <button type="submit"><a href="/signup">SignUp</a></button>
     <br/>
     <br/>
-    <button type="submit"><a href="/login">login</a></button>
+    <button type="submit"><a href="/signin">login</a></button>
     {% endif %}
     
 
-
-   <script src = "" async defer></script>
+ 
 </body>
 </html>

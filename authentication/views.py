@@ -1,9 +1,7 @@
 from cgitb import html
 from re import template
-
 from django.contrib import messages
-from django.contrib.auth import authenticate, logout
-from django.contrib.auth import login as Django_login
+from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -31,24 +29,25 @@ def signup(request):
 
     return render(request, "authentication/signup.html")        
              
-def login(request):
+def signin(request):
     if request.method == 'POST':
         username = request.POST['username']
         pass1 = request.POST['pass1']
-
-        user = authenticate(username= username, password = pass1)
+        
+        user = authenticate(username=username, password=pass1)
         
         if user is not None:
-            Django_login(request, user)
+            login(request, user)
             fname = user.first_name
-            return render(request, "authentication/index.html", {'fname': fname})
+            # messages.success(request, "Logged In Sucessfully!!")
+            return render(request, "authentication/index.html",{"fname":fname})
         else:
-            messages.error(request,"Bad credentials") 
-            return redirect('home')   
+            messages.error(request, "Bad Credentials!!")
+            return redirect('home')
+    
+    return render(request, "authentication/signin.html")
 
-    return render(request, "authentication/login.html")     
-
-def logout(request):
+def signout(request):
     logout(request)
     messages.success(request, "logged out successfully! ")
     return redirect('home')
