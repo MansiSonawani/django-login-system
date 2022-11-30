@@ -19,7 +19,21 @@ def signup(request):
         email = request.POST.get('email')  
         pass1 = request.POST.get('pass1')  
         pass2 = request.POST.get('pass2')  
-        
+
+        #user verification
+        if User.objects.filter(username = username):
+            messages.error(request, "Username already exists. Please try a different username")
+            return redirect('home')
+        if User.objects.filter(email = email):
+            messages.error(request, "Email already registered")
+            return redirect('login')
+        if len(username) > 10:
+            messages.error(request, "The username should be less than 10 characters")
+        if pass1 != pass2:
+            messages.error(request,"passwords didnt match")
+        if not username.isalnum():
+            messages.error(request,"Username must be alpha-numeric ")   
+            return redirect('home')
         myuser = User.objects.create_user(username, email,pass1)
         myuser.first_name = fname
         myuser.last_name = lname
