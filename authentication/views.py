@@ -1,11 +1,15 @@
-from cgitb import html
-from re import template
-from django.contrib import messages
-from django.contrib.auth import authenticate, logout, login
-from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
-from django.template import Template, context
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.core.mail import EmailMessage, send_mail
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_bytes, force_text
+from django.contrib.auth import authenticate, login, logout
+from mysite import settings
+#from . tokens import generate_token
 
 
 def home(request):
@@ -24,23 +28,34 @@ def signup(request):
         if User.objects.filter(username = username):
             messages.error(request, "Username already exists. Please try a different username")
             return redirect('home')
+
         if User.objects.filter(email = email):
             messages.error(request, "Email already registered")
             return redirect('login')
+
         if len(username) > 10:
             messages.error(request, "The username should be less than 10 characters")
         if pass1 != pass2:
             messages.error(request,"passwords didnt match")
+            return redirect('home')
+       
         if not username.isalnum():
             messages.error(request,"Username must be alpha-numeric ")   
             return redirect('home')
+
+
         myuser = User.objects.create_user(username, email,pass1)
         myuser.first_name = fname
         myuser.last_name = lname
+        # myuser.is_active = False
         myuser.save()
         messages.success(request, "Your account has been successfully created")
-        return redirect('Django_login')
+        
 
+        #Welcome Email
+        subject = "Welcome to KodeSprint"
+        message = "Hello" + myuser.first_name  + "!!  \n" + "Welcome to KodeSprint!! \nThank you for visiting our website\n. We have also sent you a confirmation email, please confirm your email address. \n\nThank You\nMansi Sonawani"
+        from_email = settings.EMAIL_HOST_USER
     return render(request, "authentication/signup.html")        
              
 def signin(request):
